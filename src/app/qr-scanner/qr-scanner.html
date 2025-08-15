@@ -1,0 +1,26 @@
+<video #video autoplay playsinline muted class="video"></video>
+
+<div class="controls">
+  <select name="camera" [(ngModel)]="selectedDeviceId" (ngModelChange)="onDeviceChange($event.target.value)">
+    <option *ngFor="let d of devices" [value]="d.deviceId">{{ d.label || 'Video device' }}</option>
+  </select>
+
+  <button type="button" (click)="startScan()" [disabled]="scanning">ابدأ المسح</button>
+  <button type="button" (click)="stopScan()" [disabled]="!scanning">إيقاف</button>
+  <button type="button" (click)="toggleTorch()" [disabled]="!scanning || !hasTorch">
+    {{ torchOn ? 'إطفاء الفلاش' : 'تشغيل الفلاش' }}
+  </button>
+</div>
+
+<div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+
+<div *ngIf="resultText as text" class="result">
+  <strong>النتيجة:</strong>
+  <ng-container *ngIf="isUrl(text); else notUrl">
+    <div><a [href]="text" target="_blank" rel="noopener">فتح الرابط</a></div>
+    <div class="muted">{{ text }}</div>
+  </ng-container>
+  <ng-template #notUrl>
+    <pre>{{ text }}</pre>
+  </ng-template>
+</div>
